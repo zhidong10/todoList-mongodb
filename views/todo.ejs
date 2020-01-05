@@ -1,0 +1,59 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/assets/styles.css">
+    <script src="/assets/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+    <div id="todo-table">
+        <form>
+            <input type="text" name="item" placeholder="new item">
+            <button type="submit">Add item</button>
+        </form>
+        <ul>
+            <% todos.forEach(function(todo){ %>
+                <li><%=todo.item %></li>
+            <%
+            })%>
+        </ul>
+    </div>
+<script>
+$(function(){
+$("form").on("submit",function(event){
+    event.preventDefault();
+    var item = $('form input');
+    var todo = {item:item.val().trim()};
+    $.ajax({
+        type:'post',
+        url:'/todo',
+        data:todo,
+        success:function(data){
+            location.reload();
+        }
+    })
+    return false;
+})
+
+$('li').on("click",function(){
+    var item = $(this).text().trim().replace('/ /g','-');
+    $.ajax({
+        type:'post',
+        url:'/todo/del',
+        data:{item:item},
+        success:function(){
+            location.reload();
+        }
+    })
+})
+
+
+});
+</script>
+</body>
+
+</html>
